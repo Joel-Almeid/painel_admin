@@ -1,225 +1,151 @@
 import { useState } from "react";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { toast } from "sonner";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Search } from "lucide-react";
 
-export default function Artesanato() {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+const Artesanato = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
 
-  // Mock data - will be replaced with Firebase
-  const artesanatos = [
+  // Dados de exemplo
+  const products = [
     {
       id: 1,
-      nome: "Cocar Tradicional",
-      descricao: "Cocar feito com penas naturais",
-      categoria: "Adornos",
-      artesao: "João Silva",
-      aldeia: "Canoanã",
-      imagem: "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=300",
+      title: "Cocar Tradicional",
+      artisan: "Aranã Txuiri",
+      category: "adornos",
+      description: "Cocar cerimonial confeccionado com penas naturais.",
     },
     {
       id: 2,
-      nome: "Cesta de Fibra",
-      descricao: "Cesta artesanal trançada",
-      categoria: "Utilitários",
-      artesao: "Maria Santos",
-      aldeia: "Pimentel Barbosa",
-      imagem: "https://images.unsplash.com/photo-1610894372459-a3f4a3d35c4e?w=300",
+      title: "Colar de Sementes",
+      artisan: "Juma Karajá",
+      category: "adornos",
+      description: "Colar artesanal com sementes naturais e miçangas coloridas.",
+    },
+    {
+      id: 3,
+      title: "Cesta de Fibra",
+      artisan: "Waru Javaé",
+      category: "utensílios",
+      description: "Cesta tradicional tecida à mão com fibras da palmeira de buriti.",
     },
   ];
 
-  const handleSave = () => {
-    toast.success("Artesanato salvo com sucesso!");
-    setIsDialogOpen(false);
-  };
-
-  const handleDelete = (id: number) => {
-    toast.success("Artesanato excluído com sucesso!");
-  };
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         product.artisan.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = categoryFilter === "all" || product.category === categoryFilter;
+    return matchesSearch && matchesCategory;
+  });
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold">Gerenciar Artesanato</h1>
-          <p className="text-muted-foreground mt-1">Cadastre e organize os produtos artesanais</p>
-        </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-accent text-accent-foreground hover:bg-accent/90">
-              <Plus className="h-4 w-4 mr-2" />
-              Adicionar Artesanato
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Novo Artesanato</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="nome">Nome do Artesanato</Label>
-                <Input id="nome" placeholder="Ex: Cocar Tradicional" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="descricao">Descrição</Label>
-                <Textarea id="descricao" placeholder="Descreva o artesanato..." rows={3} />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="artesao">Artesão</Label>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecionar artesão" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">João Silva</SelectItem>
-                      <SelectItem value="2">Maria Santos</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="categoria">Categoria</Label>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecionar categoria" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="adornos">Adornos</SelectItem>
-                      <SelectItem value="utilitarios">Utilitários</SelectItem>
-                      <SelectItem value="decoracao">Decoração</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="aldeia">Aldeia/Origem</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecionar aldeia" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="canoana">Canoanã</SelectItem>
-                    <SelectItem value="pimentel">Pimentel Barbosa</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="imagem">Imagem</Label>
-                <Input id="imagem" type="file" accept="image/*" />
-              </div>
-              <Button onClick={handleSave} className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-                Salvar Artesanato
-              </Button>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="bg-primary border-b border-border py-4 px-6 sticky top-0 z-50">
+        <div className="container mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-lg bg-accent flex items-center justify-center font-bold text-accent-foreground">
+              AW
             </div>
-          </DialogContent>
-        </Dialog>
-      </div>
+            <h1 className="text-xl font-bold text-white">AWIRE DIGITAL</h1>
+          </div>
+          <nav className="hidden md:flex items-center gap-6">
+            <Link to="/" className="text-white hover:text-accent transition-smooth">
+              Início
+            </Link>
+            <Link to="/artesanato" className="text-accent font-semibold">
+              Artesanato
+            </Link>
+            <Link to="/fotos" className="text-white hover:text-accent transition-smooth">
+              Fotos
+            </Link>
+            <Link to="/login">
+              <Button variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground">
+                Área do Admin
+              </Button>
+            </Link>
+          </nav>
+        </div>
+      </header>
+
+      {/* Hero */}
+      <section className="gradient-primary py-16 px-6 text-center">
+        <div className="container mx-auto">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Artesanato Tradicional</h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Conheça as belas peças produzidas pelos artesãos das comunidades Javaé e Karajá
+          </p>
+        </div>
+      </section>
 
       {/* Filters */}
-      <Card className="shadow-card border-border/50">
-        <CardContent className="pt-6">
+      <section className="py-8 px-6 bg-card">
+        <div className="container mx-auto max-w-6xl">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Buscar por nome..."
+                placeholder="Buscar por nome ou artesão..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9"
+                className="pl-10"
               />
             </div>
-            <Select>
+            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
               <SelectTrigger className="w-full md:w-[200px]">
                 <SelectValue placeholder="Categoria" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todas</SelectItem>
                 <SelectItem value="adornos">Adornos</SelectItem>
-                <SelectItem value="utilitarios">Utilitários</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select>
-              <SelectTrigger className="w-full md:w-[200px]">
-                <SelectValue placeholder="Aldeia" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todas</SelectItem>
-                <SelectItem value="canoana">Canoanã</SelectItem>
-                <SelectItem value="pimentel">Pimentel Barbosa</SelectItem>
+                <SelectItem value="utensílios">Utensílios</SelectItem>
+                <SelectItem value="instrumentos">Instrumentos</SelectItem>
               </SelectContent>
             </Select>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </section>
 
       {/* Products Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {artesanatos.map((item) => (
-          <Card key={item.id} className="shadow-card border-border/50 hover:shadow-glow transition-smooth overflow-hidden">
-            <div className="aspect-video overflow-hidden">
-              <img
-                src={item.imagem}
-                alt={item.nome}
-                className="w-full h-full object-cover transition-transform hover:scale-105"
-              />
-            </div>
-            <CardHeader>
-              <CardTitle className="text-lg">{item.nome}</CardTitle>
-              <p className="text-sm text-muted-foreground">{item.descricao}</p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2 text-sm mb-4">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Artesão:</span>
-                  <span className="font-medium">{item.artesao}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Categoria:</span>
-                  <span className="font-medium">{item.categoria}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Aldeia:</span>
-                  <span className="font-medium">{item.aldeia}</span>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="flex-1">
-                  <Pencil className="h-4 w-4 mr-1" />
-                  Editar
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1 text-destructive hover:bg-destructive/10"
-                  onClick={() => handleDelete(item.id)}
-                >
-                  <Trash2 className="h-4 w-4 mr-1" />
-                  Excluir
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <section className="py-12 px-6">
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProducts.map((product) => (
+              <Card key={product.id} className="shadow-card border-border/50 hover:shadow-glow transition-smooth">
+                <CardHeader>
+                  <div className="h-48 bg-muted rounded-lg mb-4 flex items-center justify-center">
+                    <span className="text-muted-foreground">Imagem do produto</span>
+                  </div>
+                  <CardTitle>{product.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-accent mb-2">Por: {product.artisan}</p>
+                  <p className="text-muted-foreground mb-4">{product.description}</p>
+                  <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
+                    Ver Detalhes
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-primary py-8 px-6 text-center mt-12">
+        <div className="container mx-auto">
+          <p className="text-muted-foreground mb-2">© 2025 AWIRE DIGITAL - Todos os direitos reservados</p>
+          <p className="text-sm text-muted-foreground">
+            Projeto de Extensão IFTO - Campus Formoso do Araguaia
+          </p>
+        </div>
+      </footer>
     </div>
   );
-}
+};
+
+export default Artesanato;

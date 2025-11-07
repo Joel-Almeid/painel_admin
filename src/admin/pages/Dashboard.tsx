@@ -50,14 +50,14 @@ export default function Dashboard() {
         </CardHeader>
         <CardContent className="flex flex-wrap gap-3">
           <Button
-            onClick={() => navigate("/artesanato")}
+            onClick={() => navigate("/admin/artesanato")}
             className="bg-accent text-accent-foreground hover:bg-accent/90"
           >
             <Plus className="h-4 w-4 mr-2" />
             Adicionar Artesanato
           </Button>
           <Button
-            onClick={() => navigate("/fotos")}
+            onClick={() => navigate("/admin/galeria")}
             variant="outline"
             className="border-accent/50 text-accent hover:bg-accent/10"
           >
@@ -65,7 +65,7 @@ export default function Dashboard() {
             Adicionar Foto
           </Button>
           <Button
-            onClick={() => navigate("/artesaos")}
+            onClick={() => navigate("/admin/artesaos")}
             variant="outline"
             className="border-secondary/50 text-secondary hover:bg-secondary/10"
           >

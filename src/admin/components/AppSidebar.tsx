@@ -15,19 +15,19 @@ import {
 import { Button } from "@/components/ui/button";
 
 const menuItems = [
-  { title: "Dashboard", url: "/dashboard", icon: Home },
-  { title: "Artesanato", url: "/artesanato", icon: Package },
-  { title: "Artesãos", url: "/artesaos", icon: Users },
-  { title: "Galeria", url: "/fotos", icon: Image },
-  { title: "Configurações", url: "/configuracoes", icon: Settings },
+  { title: "Dashboard", url: "/admin/dashboard", icon: Home },
+  { title: "Artesanato", url: "/admin/artesanato", icon: Package },
+  { title: "Artesãos", url: "/admin/artesaos", icon: Users },
+  { title: "Galeria", url: "/admin/galeria", icon: Image },
+  { title: "Configurações", url: "/admin/configuracoes", icon: Settings },
 ];
 
 export function AppSidebar() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Future: Firebase logout logic here
-    navigate("/");
+    // TODO: Implementar logout do Firebase aqui
+    navigate("/login");
   };
 
   return (
